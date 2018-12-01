@@ -12,6 +12,8 @@ If you don't have *pipenv* installed, from your terminal run: `pip install pipen
 ## Usage
 `python3 inky_amsat.py`
 
+_Don't forget to change your Latitude, Longitude, and Altitude to match your location_
+
 When prompted, type in the 5-digit NORAD ID of the satellite that you want to pull telemetry data for (i.e. 40967 for AO-85 or 25545 for the ISS)
 
 ## Author
