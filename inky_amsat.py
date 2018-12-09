@@ -42,31 +42,45 @@ lon = "-95.35739"
 alt = "0"
 
 # Prompt the user for input, have a selection menu, take input as function
+
+
+def norad_input(prompt):
+    while True:
+        try:
+            norad = input(prompt)
+        except ValueError:
+            print("That's not a valid entry. Please try again.")
+            continue
+        if 1 > len(norad) or len(norad) > 99999:
+            print("That's not a valid NORAD ID. Please try again.")
+            continue
+        else:
+            break
+    return norad
+
+
+norad = norad_input("Please enter a 5-digit NORAD ID: ")
+
+# Call to public API at satellite.calum.org
 while True:
     try:
-        norad = input("Please enter a 5-digit NORAD ID: ")
-    except ValueError:
-        print("That's not a valid entry. Please try again.")
-        continue
-    if 1 > len(norad) or len(norad) > 99999:
-        print("That's not a valid NORAD ID. Please try again.")
+        s_url = (
+            "http://api.satellites.calum.org/rest/v1/" +
+            norad + "/next-pass?lat=" + lat +
+            "&lon=" + lon + "&alt=" + alt
+        )
+        response = requests.get(s_url)
+        data = response.json()
+    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+        print("API Unreachable")
+        requests_cache.uninstall_cache('cache_api')
+        sys.exit(1)
+    if response.status_code == 404:
+        print("NORAD ID doesn't exist.\n")
+        norad = norad_input("Please enter a 5-digit NORAD ID: ")
         continue
     else:
         break
-
-# Call to public API at satellite.calum.org
-try:
-    s_url = (
-        "http://api.satellites.calum.org/rest/v1/" +
-        norad + "/next-pass?lat=" + lat +
-        "&lon=" + lon + "&alt=" + alt
-    )
-    response = requests.get(s_url)
-    data = response.json()
-except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-    print("API Unreachable")
-    requests_cache.uninstall_cache('cache_api')
-    sys.exit(1)
 
 """
 Parse API response and calculate time from ISO8601 to US/Central
