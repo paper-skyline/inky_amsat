@@ -9,6 +9,7 @@ verify_ssl = true
 requests = "*"
 requests-cache = "*"
 maya = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.7"

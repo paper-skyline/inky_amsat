@@ -23,3 +23,7 @@ When prompted, type in the 5-digit NORAD ID of the satellite that you want to pu
 * Without a Raspberry Pi and a Pimoroni InkyPHAT, this won't run
 * I built this on Python3 but it may also run on Python2
 * At the request of the API owner, I have utilized caching for the web calls. Please don't modify that to something less than a minute.
+
+### Future Expansion Ideas
+* Option to attempt to automatically pull gps data for location if one is available on the system
+* Possibly a second program to evaluate a list of satellites and tell you the best choice based off pass length or max elevation
