@@ -8,10 +8,10 @@ try:
 except ImportError:
     print(
         "InkyPHAT dependency not met.\n" +
-        "Please install with sudo pip install einky")
+        "Please install with pip install einky")
     sys.exit(1)
 else:
-    inky_display = InkyPHAT("red")
+    inky_display = InkyPHAT("black")
     inky_display.set_border(inky_display.WHITE)
 
 try:
@@ -19,7 +19,7 @@ try:
 except ImportError:
     print(
         "Requests dependency not met.\n" +
-        "Please install with sudo pip install requests")
+        "Please install with pip install requests")
     sys.exit(1)
 else:
     try:
@@ -29,7 +29,14 @@ else:
         print("Requests-Cache dependency not met. Not caching API calls.")
 
 import maya
-from PIL import Image, ImageFont, ImageDraw
+
+try:
+    from PIL import Image, ImageFont, ImageDraw
+except ImportError:
+    print(
+        "Python Imaging Library dependency not met.\n"
+        "Please install with pip install pillow")
+    sys.exit(1)
 
 """
 Set latitude and longtitude based on your location
