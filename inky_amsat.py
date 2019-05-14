@@ -127,7 +127,7 @@ while True:
     try:
         s_url = (
             "http://api.satellites.calum.org/rest/v1/" +
-            norad + "/next-pass?lat=" + lat +
+            str(norad) + "/next-pass?lat=" + lat +
             "&lon=" + lon + "&alt=" + alt
         )
         response = requests.get(s_url)
@@ -192,4 +192,5 @@ for item in (l1, l2, l3, l4, l5):
     inky_left = max(inky_left, inky_left_offset + width)
 
 inky_display.set_image(img)
+print("Updating eInk display...")
 inky_display.show()
