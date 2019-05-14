@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 import sys
@@ -48,7 +48,36 @@ lat = "29.27371"
 lon = "-95.35739"
 alt = "0"
 
-# Prompt the user for input, have a selection menu, take input as function
+# Dictionaries of amateur radio FM and transponder satellites
+fm_sat = {
+    "SO-50": 27607,
+    "AO-85": 40967,
+    "AO-91": 43017,
+    "AO-92": 43147,
+    "Funcube": 999999,
+    "LilacSat-2": 40908,
+    "IO-86": 40931,
+    "PO-101": 43678
+}
+tran_sat = {
+    "AO-7": 7530,
+    "FO-29": 24278,
+    "AO-73": 39444,
+    "XW-2A": 40903,
+    "XW-2B": 40911,
+    "XW-2C": 40906,
+    "XW-2D": 40907,
+    "XW-2F": 40910,
+    "LO-87": 999999,
+    "EO-88": 42017,
+    "CAS-4A": 999999,
+    "CAS-4B": 999999,
+    "JO-97": 43803,
+    "FO-99": 999999,
+    "QO-100": 43700,
+}
+
+# NORAD manual entry function
 
 
 def norad_input(prompt):
@@ -66,7 +95,32 @@ def norad_input(prompt):
     return norad
 
 
-norad = norad_input("Please enter a 5-digit NORAD ID: ")
+# Satellite selection menu
+action = input(
+    "1\tSelect an FM satellite\n" +
+    "2\tSelect a transpoder satellite\n" +
+    "3\tManually enter a 5-digit NORAD ID\n" +
+    "Enter your selection: \n")
+
+if int(action) == 1:
+    print("\nFM Satellites:")
+    for sat in sorted(fm_sat):
+        print("\t" + sat)
+    print("\n")
+    fm_sat_key = input("Enter your selection: \n")
+    norad = fm_sat[fm_sat_key]
+elif int(action) == 2:
+    print("\nTransponder Satellites:")
+    for sat in sorted(tran_sat):
+        print("\t" + sat)
+    print("\n")
+    tran_sat_key = input("Enter your selection: \n")
+    norad = tran_sat[tran_sat_key]
+elif int(action) == 3:
+    norad = norad_input("Please enter a 5-digit NORAD ID: ")
+else:
+    print("No valid action selected. Exiting.")
+    sys.exit(1)
 
 # Call to public API at satellite.calum.org
 while True:
