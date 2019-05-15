@@ -4,10 +4,10 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+timezonefinder = "*"
 
 [packages]
 requests = "*"
 requests-cache = "*"
 maya = "*"
 pillow = "*"
-

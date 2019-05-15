@@ -28,7 +28,13 @@ else:
     except ImportError:
         print("Requests-Cache dependency not met. Not caching API calls.")
 
-import maya
+try:
+    import maya
+except ImportError:
+    print(
+        "Maya dependency not met and can not calculate local time.\n" +
+        "Please install with pip install maya")
+    sys.exit(1)
 
 try:
     from PIL import Image, ImageFont, ImageDraw
@@ -77,6 +83,9 @@ tran_sat = {
     "QO-100": 43700,
 }
 
+# List of all amateur radio satellites from the dictionaries
+all_sat = set(fm_sat) | set(tran_sat)
+
 # NORAD manual entry function
 
 
@@ -95,6 +104,21 @@ def norad_input(prompt):
     return norad
 
 
+def sat_selection(prompt):
+    while True:
+        try:
+            sat_key = input(prompt)
+        except ValueError:
+            print("That's not a valid entry. Please try again.")
+            continue
+        if sat_key not in all_sat:
+            print("That's not a valid selection. Please try again.")
+            continue
+        else:
+            break
+    return sat_key
+
+
 # Satellite selection menu
 action = input(
     "1\tSelect an FM satellite\n" +
@@ -107,15 +131,15 @@ if int(action) == 1:
     for sat in sorted(fm_sat):
         print("\t" + sat)
     print("\n")
-    fm_sat_key = input("Enter your selection: \n")
-    norad = fm_sat[fm_sat_key]
+    sat_key = sat_selection("Enter your selection: ")
+    norad = fm_sat[sat_key]
 elif int(action) == 2:
     print("\nTransponder Satellites:")
     for sat in sorted(tran_sat):
         print("\t" + sat)
     print("\n")
-    tran_sat_key = input("Enter your selection: \n")
-    norad = tran_sat[tran_sat_key]
+    sat_key = input("Enter your selection: \n")
+    norad = tran_sat[sat_key]
 elif int(action) == 3:
     norad = norad_input("Please enter a 5-digit NORAD ID: ")
 else:
@@ -145,14 +169,14 @@ while True:
 
 """
 Parse API response and calculate time from ISO8601 to US/Central
-Future: Prompt user to specify or choose a timezone
+Future: Prompt user to specify a timezone or auto calculate off lat/lon.
 """
-
-start_local = maya.parse(data['start']).datetime(to_timezone='US/Central')
+local_timezone = 'US/Central'
+start_local = maya.parse(data['start']).datetime(to_timezone=local_timezone)
 start_time = start_local.strftime("%H:%M:%S")
-peak_local = maya.parse(data['tca']).datetime(to_timezone='US/Central')
+peak_local = maya.parse(data['tca']).datetime(to_timezone=local_timezone)
 peak_time = peak_local.strftime('%H:%M:%S')
-los_local = maya.parse(data['end']).datetime(to_timezone='US/Central')
+los_local = maya.parse(data['end']).datetime(to_timezone=local_timezone)
 los_time = los_local.strftime('%H:%M:%S')
 pass_time = los_local - start_local
 
@@ -191,6 +215,7 @@ for item in (l1, l2, l3, l4, l5):
     inky_top += height + 1
     inky_left = max(inky_left, inky_left_offset + width)
 
+# Initialize and update eInk display
 inky_display.set_image(img)
 print("Updating eInk display...")
 inky_display.show()
