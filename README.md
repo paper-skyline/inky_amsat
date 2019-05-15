@@ -14,7 +14,7 @@ Activate the virtual environment by `pipenv shell` and run `python3 inky_amsat.p
 
 _Don't forget to change your Latitude, Longitude, and Altitude to match your location_
 
-When prompted, type in the 5-digit NORAD ID of the satellite that you want to pull telemetry data for (i.e. 40967 for AO-85 or 25545 for the ISS)
+Make your selections from the menu prompts for either an FM satellite, transponder satellite, or to manually type in the 5-digit NORAD ID of the satellite that you want to pull telemetry data for (i.e. 25545 for the ISS)
 
 ## Author
 * Ben Cook on [Twitter](https://twitter.com/bpcook)
@@ -26,4 +26,6 @@ When prompted, type in the 5-digit NORAD ID of the satellite that you want to pu
 
 ### Future Expansion Ideas
 * Option to attempt to automatically pull gps data for location if one is available on the system
+* Option to automatically calculate your timezone based off of lat/lon
 * Possibly a second program to evaluate a list of satellites and tell you the best choice based off pass length or max elevation
+* Possibly an option to track a specific satellite and continue to update the eInk display for a set amount of time like 24-hours
