@@ -21,11 +21,10 @@ Make your selections from the menu prompts for either an FM satellite, transpond
 
 ## Notes
 * Without a Raspberry Pi and a Pimoroni InkyPHAT, this won't run
-* I built this on Python3 and may not work with Python2
+* Built for Python3
 * At the request of the API owner, I have utilized caching for the web calls. Please don't modify that to something less than a minute.
 
 ### Future Expansion Ideas
 * Option to attempt to automatically pull gps data for location if one is available on the system
-* Option to automatically calculate your timezone based off of lat/lon
 * Possibly a second program to evaluate a list of satellites and tell you the best choice based off pass length or max elevation
 * Possibly an option to track a specific satellite and continue to update the eInk display for a set amount of time like 24-hours

@@ -44,15 +44,53 @@ except ImportError:
         "Please install with pip install pillow")
     sys.exit(1)
 
-"""
-Set latitude and longtitude based on your location
-Future: try to import based off GPS if exists, else prompt, else default to
-Houston, TX USA
-"""
+try:
+    from timezonefinder import TimezoneFinder
+except ImportError:
+    print(
+        "TimezoneFinder dependency not met and not calculate current timezone.\n" +
+        "Please install with pip install timezonefinder")
 
-lat = "29.27371"
+"""
+Set latitude and longitude based on your location
+Future: get GPS location if it exists, else prompt, else default to
+Houston, TX USA
+
+lat = "29.27371" # minimum of 3 numbers max of 9 numbers
 lon = "-95.35739"
 alt = "0"
+"""
+
+# Create a function with validation check for manually entered location data
+
+
+def location(prompt):
+    while True:
+        try:
+            location_data = input(prompt)
+        except ValueError:
+            print("That's not a valid entry. Please try again.")
+            continue
+        if (
+            3 > len(str(location_data).replace('.', '')) or
+                len(str(location_data).replace('.', '')) > 9):
+            print("That's not a valid entry. Please try again.")
+            continue
+        else:
+            break
+    return location_data
+
+
+lat = location("Please enter your latitude in deg.decimal format: ")
+lon = location("Please enter your longitude in deg.decimal format: ")
+alt = input("Please enter your altitude in feet: ")
+
+try:
+    tf = TimezoneFinder()
+    local_timezone = tf.timezone_at(lat=float(lat), lng=float(lon))
+except NameError:
+    print("TimezoneFinder dependency not met; defaulting to 'America/Chicago'")
+    local_timezone = 'America/Chicago'
 
 # Dictionaries of amateur radio FM and transponder satellites
 fm_sat = {
@@ -168,10 +206,10 @@ while True:
         break
 
 """
-Parse API response and calculate time from ISO8601 to US/Central
+Parse API response and calculate time from ISO8601 to local timezone.
 Future: Prompt user to specify a timezone or auto calculate off lat/lon.
 """
-local_timezone = 'US/Central'
+
 start_local = maya.parse(data['start']).datetime(to_timezone=local_timezone)
 start_time = start_local.strftime("%H:%M:%S")
 peak_local = maya.parse(data['tca']).datetime(to_timezone=local_timezone)
